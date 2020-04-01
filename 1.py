@@ -46,10 +46,11 @@ def logger(text):
 
 
 author_name = []
-
+data = []
 
 def converstaion(replies_object):
     global author_name
+    global data
     if replies_object is not None:
         num = 0
         for r in replies_object:
@@ -59,9 +60,14 @@ def converstaion(replies_object):
                 author_name.append(r.author.name)
                 converstaion(r.replies)
                 print("  " + r.author.name + " replied "
-                      + author_name[len(author_name) - 1]
+                      + author_name[len(author_name) - 2]
                       + ": " + r.content + "\n")
+                data.append({"name": author_name[len(author_name) - 2],
+                             "replied by": r.author.name,
+                             "content": r.content})
+                author_name.pop(len(author_name) - 1)
             num += 1
+        return data
 
 
 if __name__ == '__main__':
@@ -106,7 +112,9 @@ if __name__ == '__main__':
         #             print("     " + u.author.name + " replied " + n.author.name + ': ' + u.content + "\n")
         #         num += 1
         #     num += 1
-        converstaion(i.replies)
+        print(converstaion(i.replies))
+        print(len(data))
+        data = []
         num += 1
 
     # print(answer.comment)
