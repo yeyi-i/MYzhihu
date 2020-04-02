@@ -1,7 +1,9 @@
 from django.urls import path
-from . import views
+from common import views
 
 urlpatterns = [
     path('question/', views.question, name='question'),
-    path('', views.index, name='index'),
+    path('index/', views.index, name='index'),
+    path('', views.index),
+    path('question/<int:questionId>', views.question_detail)
 ]

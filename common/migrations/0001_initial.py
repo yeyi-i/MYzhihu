@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                 ('pub_date', models.DateTimeField(verbose_name='date published')),
                 ('question_detail', models.TextField()),
                 ('question_title', models.TextField()),
+                ('question_id', models.IntegerField()),
             ],
         ),
         migrations.CreateModel(

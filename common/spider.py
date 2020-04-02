@@ -1,8 +1,32 @@
 from __future__ import unicode_literals, print_function
 
 import os
-from . import
 from zhihu_oauth import ZhihuClient
+
+author_name = []
+data = []
+
+
+def conversation(replies_object):
+    global author_name
+    global data
+    if replies_object is not None:
+        num = 0
+        for r in replies_object:
+            if num == 3:
+                break
+            if num > 0:
+                author_name.append(r.author.name)
+                conversation(r.replies)
+                # print("  " + r.author.name + " replied "
+                #       + author_name[len(author_name) - 2]
+                #       + ": " + r.content + "\n")
+                data.append({"name": author_name[len(author_name) - 2],
+                             "replied by": r.author.name,
+                             "content": r.content})
+                author_name.pop(len(author_name) - 1)
+            num += 1
+        return data
 
 
 def get_question_num(url):
@@ -25,18 +49,16 @@ def get_question_num(url):
 #     print("内容： " + i.content)
 
 def main(url):
-    content={}
+    content = {}
     client = ZhihuClient()
     TOKEN_FILE = '../static/token.pkl'
     if os.path.isfile(TOKEN_FILE):
         client.load_token(TOKEN_FILE)
     else:
-        print("You will need a token file about your account to get all information.")
+        print("No token file.")
 
     # 由于提供的通常都是指定回答的连接，直接使用OAUTH库里的自动提取from_url函数的话，
     # 无法直接提取答案的ID，只能再用一下自己写的截取答案ID函数。
     question = client.question(get_question_num(url))
-    answer = client.from_url(url) # 自动提取函数提取回答ID
-    content = {'question_title':question.title, 'question_author':question.author.name}
-
-
+    answer = client.from_url(url)  # 自动提取函数提取回答ID
+    content = {'question_title': question.title, 'question_author': question.author.name}

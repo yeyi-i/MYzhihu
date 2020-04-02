@@ -7,6 +7,7 @@ class Question(models.Model):
     pub_date = models.DateTimeField('date published')
     question_title = models.TextField()
     question_detail = models.TextField()
+    question_id = models.IntegerField()
 
 
 class Answer(models.Model):

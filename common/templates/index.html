@@ -5,11 +5,12 @@
     <title>我的知乎</title>
 </head>
 <h1>DEBUG： </h1>>
-<form action="/index/" method="post">
+<form action="index/" method="post">
 {% csrf_token %}
 问题标题:  <input type="text" name="question_title" />
 问题作者： <input type="text" name="question_author" />
-问题: <input type="text" name="question_detail" />
+问题内容: <input type="text" name="question_detail" />
+问题知乎ID: <input type="text" name="question_id" />
 <input type="submit" value="提交" />
 </form>
 <br>
