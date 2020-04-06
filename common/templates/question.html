@@ -9,9 +9,8 @@
     <ul>
         {% for question in question_list %}
             <li>ID: {{ question.id }}
-                Title: <a href="{{ question.id }}">{{ question.question_title }}</a>
+                Title: <a href="{{ question.question_id }}">{{ question.question_title }}</a>
                 QuestionID: {{ question.question_id }}
-                Author: {{ question.question_author }}
                 Detail: {{ question.question_detail }}
                 Publish Date: {{ question.pub_date }}
             </li>

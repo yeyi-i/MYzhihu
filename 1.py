@@ -3,6 +3,8 @@
 from __future__ import unicode_literals, print_function
 
 import os
+from datetime import *
+
 from zhihu_oauth import ZhihuClient
 
 
@@ -59,9 +61,9 @@ def converstaion(replies_object):
             if num > 0:
                 author_name.append(r.author.name)
                 converstaion(r.replies)
-                print("  " + r.author.name + " replied "
-                      + author_name[len(author_name) - 2]
-                      + ": " + r.content + "\n")
+                # print("  " + r.author.name + " replied "
+                #       + author_name[len(author_name) - 2]
+                #       + ": " + r.content + "\n")
                 data.append({"name": author_name[len(author_name) - 2],
                              "replied by": r.author.name,
                              "content": r.content})
@@ -83,7 +85,11 @@ if __name__ == '__main__':
     # # print(question.author.name) # 没有这个author类
     # print(question.title)
     # print(question.detail)
-    # print(question.updated_time)
+
+    # 这里返回的时间是string数据，必须转成Datetime数据
+    # d = datetime.fromtimestamp(question.updated_time)
+    # str1 = d.strftime("%Y-%m-%d %H:%M")
+    # print(str1)
 
     answer = client.from_url('https://www.zhihu.com/question/382545061/answer/1105370864')
     # print(answer.author.name)

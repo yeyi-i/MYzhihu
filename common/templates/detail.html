@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-{% if question_content %}
 <html lang="en">
+{% if question_content %}
 <head>
     <meta charset="UTF-8">
     <title>{{ question_content.question_title }}</title>
@@ -8,9 +8,7 @@
 <body>
 <p>{{ question_content.question_detail }}</p>>
 </body>
-</html>
 {% else %}
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>糟糕！出错了！</title>
@@ -18,5 +16,5 @@
 <body>
     <p>无法打开对应的网页！</p>
 </body>
-</html>
 {% endif %}
+</html>

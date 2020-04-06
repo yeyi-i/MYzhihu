@@ -16,8 +16,7 @@ class Migration(migrations.Migration):
             name='Question',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('question_author', models.CharField(max_length=30)),
-                ('pub_date', models.DateTimeField(verbose_name='date published')),
+                ('question_pubDate', models.DateTimeField(verbose_name='question date published')),
                 ('question_detail', models.TextField()),
                 ('question_title', models.TextField()),
                 ('question_id', models.IntegerField()),
@@ -27,9 +26,10 @@ class Migration(migrations.Migration):
             name='Answer',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('Answer_author', models.CharField(max_length=30)),
-                ('Answer_text', models.TextField()),
                 ('Answer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='common.Question')),
+                ('Answer_author', models.CharField(max_length=30)),
+                ('Answer_content', models.TextField()),
+                ('Answer_pubDate', models.DateTimeField(verbose_name='answer date published'))
             ],
         ),
     ]

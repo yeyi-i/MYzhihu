@@ -1,6 +1,8 @@
 from __future__ import unicode_literals, print_function
 
 import os
+from datetime import datetime
+
 from zhihu_oauth import ZhihuClient
 
 author_name = []
@@ -40,6 +42,13 @@ def get_question_num(url):
     return int(url_question)
 
 
+def timestamp_to_datetime(date_num):
+    d = datetime.fromtimestamp(date_num)
+    str1 = d.strftime("%Y-%m-%d %H:%M")
+
+    return str1
+
+
 # 爬取答案：
 # answer = client.answer(1071790931)
 # print(answer.content)
@@ -51,7 +60,7 @@ def get_question_num(url):
 def main(url):
     content = {}
     client = ZhihuClient()
-    TOKEN_FILE = '../static/token.pkl'
+    TOKEN_FILE = './static/token.pkl'
     if os.path.isfile(TOKEN_FILE):
         client.load_token(TOKEN_FILE)
     else:
@@ -61,4 +70,10 @@ def main(url):
     # 无法直接提取答案的ID，只能再用一下自己写的截取答案ID函数。
     question = client.question(get_question_num(url))
     answer = client.from_url(url)  # 自动提取函数提取回答ID
-    content = {'question_title': question.title, 'question_author': question.author.name}
+    content = {'question_id': get_question_num(url), 'question_title': question.title,
+               # 'question_author': question.author.name,
+               'question_detail': question.detail,
+               'question_pubDate': timestamp_to_datetime(question.updated_time), 'answer_author': answer.author.name,
+               'answer_pubDate': timestamp_to_datetime(answer.updated_time), 'answer_content': str(answer.content)}
+
+    return content
