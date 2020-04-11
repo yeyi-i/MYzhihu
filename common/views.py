@@ -13,21 +13,31 @@ def getZHIHU(request):
     if request.POST:
         # 还需要写一个valid function决定url是否是知乎的
         content = spider.main(request.POST['zhihu_url'])
+        # print(content)
 
-        Question.objects.create(  # question_author=content[question_],
-            question_pubDate=content['question_pubDate'],
-            question_detail=content['question_detail'],
-            question_title=content['question_title'],
-            question_id=content['question_id'])
+        # check if database contain same question!
+        Quest_id = Question.objects.filter(question_id=content['question_id']).values('question_id')
+        if not Quest_id:
+            Question.objects.create(  # question_author=content[question_],
+                question_pubDate=content['question_pubDate'],
+                question_detail=content['question_detail'],
+                question_title=content['question_title'],
+                question_id=content['question_id'])
+        else:
+            print("数据库已经存在相同的问题！")
 
-        # Answer.objects.create(
-        #     Answer_author=content['answer_author'],
-        #     # Answer_content=content['answer_content'],
-        #     # Content seems need more work because of type error
-        #     Answer_pubDate=content['answer_pubDate']
-        # )
-
-        # Answer part needs more work!!!!!
+        # check if database contain same answer!
+        Ans_id = Answer.objects.filter(Answer_id=content['answer_id']).values('Answer_id')
+        if not Ans_id:
+            Answer.objects.create(
+                Answer_id=content['answer_id'],
+                Answer_author=content['answer_author'],
+                Answer_content=content['answer_content'],
+                Answer_pubDate=content['answer_pubDate'],
+                Question=Question.objects.get(question_id=content['question_id'])
+            )
+        else:
+            print("数据库已经存在相同的答案！")
 
     return HttpResponse(content)
 
@@ -40,6 +50,7 @@ def question(request):
     return render(request, 'common/templates/question.html', context)
 
 
+# TODO : 需要增加回答的显示！
 def question_detail(request, questionId):
     global context
     question_content = Question.objects.all()

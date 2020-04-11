@@ -42,6 +42,17 @@ def get_question_num(url):
     return int(url_question)
 
 
+def get_answer_num(url):
+    url_answer = ""
+
+    for i in url.replace("https://www.zhihu.com/question/386840648/answer/", ''):
+        if i == "/":
+            break
+        url_answer += i
+
+    return int(url_answer)
+
+
 def timestamp_to_datetime(date_num):
     d = datetime.fromtimestamp(date_num)
     str1 = d.strftime("%Y-%m-%d %H:%M")
@@ -72,8 +83,8 @@ def main(url):
     answer = client.from_url(url)  # 自动提取函数提取回答ID
     content = {'question_id': get_question_num(url), 'question_title': question.title,
                # 'question_author': question.author.name,
-               'question_detail': question.detail,
-               'question_pubDate': timestamp_to_datetime(question.updated_time), 'answer_author': answer.author.name,
+               'question_detail': question.detail, 'question_pubDate': timestamp_to_datetime(question.updated_time),
+               'answer_id': get_answer_num(url), 'answer_author': answer.author.name,
                'answer_pubDate': timestamp_to_datetime(answer.updated_time), 'answer_content': str(answer.content)}
 
     return content
