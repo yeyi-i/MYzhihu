@@ -2,23 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <title>我的知乎</title>
 </head>
-<h1>DEBUG： </h1>>
-<form action="index/" method="post">
-{% csrf_token %}
-问题标题:  <input type="text" name="question_title" />
-问题内容: <input type="text" name="question_detail" />
-问题知乎ID: <input type="text" name="question_id" />
-<input type="submit" value="提交" />
-</form>
-<br>
-    ------------
-<br>
-<form action="getZHIHU/" method="post">
-    {% csrf_token %}
-    URL： <input type="url" name="zhihu_url" />
-    <input type="submit" value="爬取">
-</form>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            我的知乎
+        </el-header>
+        <el-main>
+            <el-form :inline="true">
+                <el-form-item>
+                    <el-input v-model="url" placeholder="请输入URL"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" round @click="Getzhihu">爬取</el-button>
+                </el-form-item>
+            </el-form>
+            <!--            <form action="getZHIHU/" method="post">-->
+            <!--                URL： <input type="url" name="zhihu_url"/>-->
+            <!--                <el-button type="primary" round>爬取</el-button>-->
+            <!--            </form>-->
+        </el-main>
+    </el-container>
+</div>
 </body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!--<script>new Vue().$mount('#app')</script>-->
+<!--axios.post('/user', {-->
+<!--    firstName: 'Fred',-->
+<!--    lastName: 'Flintstone'-->
+<!--  })-->
+<!--  .then(function (response) {-->
+<!--    console.log(response);-->
+<!--  })-->
+<!--  .catch(function (error) {-->
+<!--    console.log(error);-->
+<!--  });-->
+<script>
+let app = new Vue({
+  el: '#app',
+  data: {
+    loading: false,
+    url: '',
+  },
+  methods: {
+    Getzhihu(){
+        this.loading = true;
+        axios({
+            method: 'post',
+            url: '/getZHIHU/',
+            data: {
+                url:this.url,
+            },
+        }).then(function (response) {
+        console.log(response);
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
+        this.loading = false;
+    }
+  }
+});
+
+
+
+
+
+
+
+
+</script>
+<p>----------------------------------------------------------------------------------------------------------</p>
+<h1>DEBUG： </h1>
+<form action="index/" method="post">
+    问题标题: <input type="text" name="question_title"/>
+    问题内容: <input type="text" name="question_detail"/>
+    问题知乎ID: <input type="text" name="question_id"/>
+    <input type="submit" value="提交"/>
+</form>
 </html>

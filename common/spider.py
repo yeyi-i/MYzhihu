@@ -45,9 +45,9 @@ def get_question_num(url):
 def get_answer_num(url):
     url_answer = ""
 
-    for i in url.replace("https://www.zhihu.com/question/386840648/answer/", ''):
-        if i == "/":
-            break
+    for i in url.replace("https://www.zhihu.com/question/"
+                         + str(get_question_num(url))
+                         + "/answer/", ''):
         url_answer += i
 
     return int(url_answer)
@@ -69,22 +69,25 @@ def timestamp_to_datetime(date_num):
 #     print("内容： " + i.content)
 
 def main(url):
-    content = {}
-    client = ZhihuClient()
-    TOKEN_FILE = './static/token.pkl'
-    if os.path.isfile(TOKEN_FILE):
-        client.load_token(TOKEN_FILE)
-    else:
-        print("No token file.")
+    try:
+        content = {}
+        client = ZhihuClient()
+        TOKEN_FILE = './static/token.pkl'
+        if os.path.isfile(TOKEN_FILE):
+            client.load_token(TOKEN_FILE)
+        else:
+            print("No token file.")
 
-    # 由于提供的通常都是指定回答的连接，直接使用OAUTH库里的自动提取from_url函数的话，
-    # 无法直接提取答案的ID，只能再用一下自己写的截取答案ID函数。
-    question = client.question(get_question_num(url))
-    answer = client.from_url(url)  # 自动提取函数提取回答ID
-    content = {'question_id': get_question_num(url), 'question_title': question.title,
-               # 'question_author': question.author.name,
-               'question_detail': question.detail, 'question_pubDate': timestamp_to_datetime(question.updated_time),
-               'answer_id': get_answer_num(url), 'answer_author': answer.author.name,
-               'answer_pubDate': timestamp_to_datetime(answer.updated_time), 'answer_content': str(answer.content)}
+        # 由于提供的通常都是指定回答的连接，直接使用OAUTH库里的自动提取from_url函数的话，
+        # 无法直接提取答案的ID，只能再用一下自己写的截取答案ID函数。
+        question = client.question(get_question_num(url))
+        answer = client.from_url(url)  # 自动提取函数提取回答ID
+        content = {'question_id': get_question_num(url), 'question_title': question.title,
+                   # 'question_author': question.author.name,
+                   'question_detail': question.detail, 'question_pubDate': timestamp_to_datetime(question.updated_time),
+                   'answer_id': get_answer_num(url), 'answer_author': answer.author.name,
+                   'answer_pubDate': timestamp_to_datetime(answer.updated_time), 'answer_content': str(answer.content)}
 
-    return content
+        return content
+    except Exception as e:
+        raise e

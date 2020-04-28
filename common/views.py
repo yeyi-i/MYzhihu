@@ -6,14 +6,16 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from . import spider
+import json
 
 
 # Create your views here.
 def getZHIHU(request):
-    if request.POST:
+    if request.body:
+
         # 还需要写一个valid function决定url是否是知乎的
-        content = spider.main(request.POST['zhihu_url'])
-        # print(content)
+        content = json.loads(request.body)
+        content = spider.main(content['url'])
 
         # check if database contain same question!
         Quest_id = Question.objects.filter(question_id=content['question_id']).values('question_id')
@@ -39,7 +41,10 @@ def getZHIHU(request):
         else:
             print("数据库已经存在相同的答案！")
 
-    return HttpResponse(content)
+        return HttpResponse(content)
+
+    else:
+        return HttpResponse("No request data")
 
 
 def question(request):
