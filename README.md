@@ -7,5 +7,6 @@
 1. Python Django
 2. SQLite3
 3. ZhihuOAuth (写这个库的大佬是真的NB~)
+4. Element-ui (vue + vue route)
 
-PS.以前没接触过Django,还在像婴儿一样每天学着走路。
+PS.以前没接触过Django,目前还在慢慢摸索学习
