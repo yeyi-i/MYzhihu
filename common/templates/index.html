@@ -30,54 +30,73 @@
 </body>
 <!-- import Vue before Element -->
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!--import router JavaScript-->
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<!--<script>new Vue().$mount('#app')</script>-->
-<!--axios.post('/user', {-->
-<!--    firstName: 'Fred',-->
-<!--    lastName: 'Flintstone'-->
-<!--  })-->
-<!--  .then(function (response) {-->
-<!--    console.log(response);-->
-<!--  })-->
-<!--  .catch(function (error) {-->
-<!--    console.log(error);-->
-<!--  });-->
 <script>
+const router = new VueRouter({
+  base: '/',
+  mode: 'history',
+  routes: [{path: '/question'}]
+});
 let app = new Vue({
   el: '#app',
+  router,
   data: {
     loading: false,
     url: '',
   },
   methods: {
+    N_success: function() {
+        this.$message({
+            message: '抓取成功',
+            type: 'success'
+        });
+    },
+    N_warning: function() {
+        this.$message({
+            message: '请输入知乎网页地址！',
+            type: 'warning'
+        });
+    },
+    N_error: function() {
+        this.$message({
+            message: '出错了！',
+            type: 'error'
+        });
+    },
+    question_page: function() {
+        console.log(this);
+        this.$router.push('/question');
+        this.$router.go(0);
+    },
     Getzhihu(){
-        this.loading = true;
         axios({
             method: 'post',
             url: '/getZHIHU/',
             data: {
                 url:this.url,
             },
-        }).then(function (response) {
-        console.log(response);
+        })
+        .then(function (response) {
+            console.log(response);
+            if (response.data.success == null){
+                app.N_warning();
+            };
+            if (response.data.success == true){
+                app.N_success();
+                app.question_page();
+            };
         })
         .catch(function (error) {
-        console.log(error);
+            console.log(error);
+            app.N_error();
         });
-        this.loading = false;
     }
   }
 });
-
-
-
-
-
-
-
-
 </script>
 <p>----------------------------------------------------------------------------------------------------------</p>
 <h1>DEBUG： </h1>

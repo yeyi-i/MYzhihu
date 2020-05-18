@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-{% if question_content %}
+{% if question_content or answer_content %}
 <head>
     <meta charset="UTF-8">
     <title>{{ question_content.question_title }}</title>
@@ -10,6 +10,8 @@
 {{ question_content.question_detail }}
 <br>
 
+<p>{{ answer_author }}</p>
+<p>{{ answer_content }}</p>
 </body>
 {% else %}
 <head>

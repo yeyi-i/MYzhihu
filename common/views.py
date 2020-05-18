@@ -3,7 +3,7 @@ from django.shortcuts import render
 from .models import Question
 from .models import Answer
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.http import HttpResponse
 from . import spider
 import json
@@ -11,10 +11,10 @@ import json
 
 # Create your views here.
 def getZHIHU(request):
-    if request.body:
+    content = json.loads(request.body)
 
+    if content['url'] is not "":
         # 还需要写一个valid function决定url是否是知乎的
-        content = json.loads(request.body)
         content = spider.main(content['url'])
 
         # check if database contain same question!
@@ -41,10 +41,17 @@ def getZHIHU(request):
         else:
             print("数据库已经存在相同的答案！")
 
-        return HttpResponse(content)
+        return JsonResponse({'success': True})
+
+    elif content['url'] is "":
+        Res = {'success': None}
+        print("requesting nothing.")
+        return JsonResponse(Res)
 
     else:
-        return HttpResponse("No request data")
+        R = {'success': False}
+        print("Opps, something went wrong!")
+        return JsonResponse(R)
 
 
 def question(request):
@@ -59,13 +66,21 @@ def question(request):
 def question_detail(request, questionId):
     global context
     question_content = Question.objects.all()
-    for i in question_content:
-        if i.question_id == questionId:  # question_id must have one and only one id, but one question_id may
+    for q in question_content:
+        if q.question_id == questionId:  # question_id must have one and only one id, but one question_id may
             # associate with multiple answers which need some work.
             context = {
-                'question_content': i
+                'question_content': q
             }
-            print(i)
+
+            break
+
+    answer_content = Answer.objects.all()
+    for a in answer_content:
+        if a.Question_id == questionId:
+            context['answer_content'] = a.Answer_content
+            context['answer_author'] = a.Answer_author
+
             break
 
     return render(request, 'common/templates/detail.html', context)
